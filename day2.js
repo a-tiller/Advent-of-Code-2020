@@ -1,41 +1,27 @@
 const fs = require('fs');
 
-let policyPasswordPairs = [];
+const input = fs.readFileSync(__dirname + '/inputs/day2.input', 'utf8').split('\n');
 
-fs.readFile(__dirname + '/inputs/day2.input', function (err, data) {
-  policyPasswordPairs = data.toString().split('\n');
+function parsePolicyPasswordPair(policyPasswordPair) {
+  const [lowString, highString, letter, password] = policyPasswordPair.split(/[\s:-]+/);
+  return [parseInt(lowString), parseInt(highString), letter, password];
+}
 
-  let validPasswords = 0;
-  // part 1
-  for (const pair of policyPasswordPairs) {
-    const [count, letter, string] = pair.split(' ');
-    const [min, max] = count.split('-');
-    let occurrences = 0;
+function countValidPasswords(policyPasswordPairs, test) {
+  return policyPasswordPairs
+    .map(policyPasswordPair => parsePolicyPasswordPair(policyPasswordPair))
+    .filter(policyAndPassword => test(...policyAndPassword))
+    .length;
+}
 
-    for (let i = 0; i < string.length; i++) {
-      if (string[i] === letter[0]) occurrences++;
-    }
+function isPartOneValid(min, max, letter, password) {
+  const repeats = password.split('').filter((char) => (char === letter)).length;
+  return min <= repeats && repeats <= max;
+}
 
-    if (occurrences >= min && occurrences <= max) {
-      validPasswords++;
-    }
-  }
+function isPartTwoValid(first, second, letter, password) {
+  return (password[first - 1] === letter) ^ (password[second - 1] === letter);
+}
 
-  console.log('Part 1: ', validPasswords);
-
-  validPasswords = 0;
-
-  //part 2
-  for (const pair of policyPasswordPairs) {
-    const [positions, letter, string] = pair.split(' ');
-    const [firstPosition, secondPosition] = positions.split('-');
-
-    if ((string[firstPosition - 1] === letter[0] || string[secondPosition - 1] === letter[0])
-        && string[firstPosition - 1] !== string[secondPosition - 1]) {
-      validPasswords++;
-    }
-  }
-
-  console.log('Part 2: ', validPasswords);
-});
-
+console.log('Part 1: ', countValidPasswords(input, isPartOneValid));
+console.log('Part 2: ', countValidPasswords(input, isPartTwoValid));
