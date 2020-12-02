@@ -9,7 +9,7 @@ fs.readFile(__dirname + '/inputs/day2.input', function (err, data) {
   // part 1
   for (const pair of policyPasswordPairs) {
     const [count, letter, string] = pair.split(' ');
-    let [min, max] = count.split('-');
+    const [min, max] = count.split('-');
     let occurrences = 0;
 
     for (let i = 0; i < string.length; i++) {
@@ -27,8 +27,8 @@ fs.readFile(__dirname + '/inputs/day2.input', function (err, data) {
 
   //part 2
   for (const pair of policyPasswordPairs) {
-    const [count, letter, string] = pair.split(' ');
-    let [firstPosition, secondPosition] = count.split('-');
+    const [positions, letter, string] = pair.split(' ');
+    const [firstPosition, secondPosition] = positions.split('-');
 
     if ((string[firstPosition - 1] === letter[0] || string[secondPosition - 1] === letter[0])
         && string[firstPosition - 1] !== string[secondPosition - 1]) {
