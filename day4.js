@@ -27,9 +27,9 @@ const requiredFields = [
 const wellFormedPassports = passports.filter((passport) => (hasAllFields(passport, requiredFields)));
 
 const validationTests = {
-  byr: ({ byr }) => (/^\d{4}$/.test(byr) && byr <= 2002 && byr >= 1920),
-  iyr: ({ iyr }) => (/^\d{4}$/.test(iyr) && iyr <= 2020 && iyr >= 2010),
-  eyr: ({ eyr }) => (/^\d{4}$/.test(eyr) && eyr <= 2030 && eyr >= 2020),
+  byr: ({ byr }) => (/^\d{4}$/.test(byr) && byr >= 1920 && byr <= 2002),
+  iyr: ({ iyr }) => (/^\d{4}$/.test(iyr) && iyr >= 2010 && iyr <= 2020),
+  eyr: ({ eyr }) => (/^\d{4}$/.test(eyr) && eyr >= 2020 && eyr <= 2030),
   hgt: ({ hgt }) => {
     if (!/^(\d+)(cm|in)$/.test(hgt)) return false;
 
