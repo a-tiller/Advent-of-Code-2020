@@ -2,27 +2,32 @@ const fs = require('fs');
 
 const input = fs.readFileSync(__dirname + '/inputs/day6.input', 'utf8').split('\n\n');
 
+
 function anyYes(group) {
-  const individuals = group.split('\n');
-  const anyYes = new Set(individuals.join(''));
+  const anyYes = new Set(group.join(''));
 
   return anyYes.size;
 }
 
 function allYes(group) {
-  const individuals = group.split('\n');
-  const allYes = new Set(individuals[0]);
+  const allYes = new Set(group[0]);
 
-  for (let i = 1; i < individuals.length; i++) {
-    const current = new Set(individuals[i]);
+  for (let i = 1; i < group.length; i++) {
+    const member = new Set(group[i]);
 
     allYes.forEach(value => {
-      if (!current.has(value)) allYes.delete(value);
+      if (!member.has(value)) allYes.delete(value);
     });
+
+    if (!allYes.size) return 0;
   }
 
   return allYes.size;
 }
 
-console.log("Part 1: ", input.map(anyYes).reduce((a, b) => (a + b)));
-console.log("Part 2: ", input.map(allYes).reduce((a, b) => (a + b)));
+const findTotalOf = (array, predicate = (v) => (v)) => (array.map(predicate).reduce((a, b) => (a + b)));
+
+const groups = input.map(group => group.split('\n'));
+
+console.log("Part 1: ", findTotalOf(groups, anyYes));
+console.log("Part 2: ", findTotalOf(groups, allYes));
