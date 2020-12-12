@@ -3,7 +3,6 @@ const fs = require('fs');
 const input = fs.readFileSync(__dirname + '/inputs/day12.input', 'utf8').split('\n');
 
 function followDirections(directionList) {
-
   let eastWest = 0;
   let northSouth = 0;
   let facing = 1;
@@ -16,7 +15,7 @@ function followDirections(directionList) {
     if (instruction === 'F') instruction = facings[facing];
 
     if (instruction === 'R') facing = (facing + (units / 90)) % 4;
-    if (instruction === 'L') facing = (facing - (units / 90) + 4) % 4;
+    else if (instruction === 'L') facing = (facing - (units / 90) + 4) % 4;
 
     else if (instruction === 'N') northSouth += units;
     else if (instruction === 'S') northSouth -= units;
@@ -47,16 +46,8 @@ function followWaypoint(directionList) {
     else if (instruction === 'E') waypointEW += units;
     else if (instruction === 'W') waypointEW -= units;
 
-    else if (instruction === 'R') {
-      const newCoords = rotateWaypointRight(waypointEW, waypointNS, units / 90);
-      waypointEW = newCoords.waypointEW;
-      waypointNS = newCoords.waypointNS;
-    }
-    else if (instruction === 'L') {
-      const newCoords = rotateWaypointLeft(waypointEW, waypointNS, units / 90);
-      waypointEW = newCoords.waypointEW;
-      waypointNS = newCoords.waypointNS;
-    }
+    else if (instruction === 'R') ({waypointEW, waypointNS} = rotateWaypointRight(waypointEW, waypointNS, units / 90));
+    else if (instruction === 'L') ({waypointEW, waypointNS} = rotateWaypointLeft(waypointEW, waypointNS, units / 90));
   }
 
   return {x: shipEW, y: shipNS};
