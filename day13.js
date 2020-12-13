@@ -29,7 +29,7 @@ function makeBusPositions(busArray) {
   return busPositions;
 }
 
-function earliestParade(busPositions, slowestBus) {
+function earliestParade(busPositions) {
   let timeStart = 0;
   let timeIncrement = 1;
 
@@ -54,9 +54,9 @@ function earliestParade(busPositions, slowestBus) {
 
 const now = parseInt(input[0], 10);
 const busArray = input[1].split(',');
-const busses = busArray.filter(bus => bus !== 'x').map(Number);
 
+const busses = busArray.filter(bus => bus !== 'x').map(Number);
 const best = earliestDeparture(now, busses);
 console.log("Part 1: ", best.busId * best.wait);
 
-console.log("Part 2: ", earliestParade(makeBusPositions(busArray), Math.max(...busses)));
+console.log("Part 2: ", earliestParade(makeBusPositions(busArray)));
