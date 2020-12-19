@@ -2,6 +2,29 @@ const fs = require('fs');
 
 const [rulesInput, messagesInput] = fs.readFileSync(__dirname + '/inputs/day19.input', 'utf8').split('\n\n');
 
+function parseRules(rulesBlob) {
+  rulesBlob = rulesBlob.split('\n');
+
+  const rulesMap = new Array(rulesBlob.length);
+
+  for (const ruleString of rulesBlob) {
+    const [index, rule] = ruleString.split(': ');
+    rulesMap[index] = rule.split(' | ')
+                          .map(option => {
+                                return option.split(' ').map((member) => {
+                                  if (isNaN(Number(member))) return member[1];
+                                  return Number(member);
+                                });
+                              });
+  }
+
+  return rulesMap;
+}
+
+function parseMessages(messagesBlob) {
+  return messagesBlob.split('\n')
+}
+
 function topologicalSort(rulesMap) {
   const referencedBy = new Array(rulesMap.length).fill(0).map(() => new Set());
 
@@ -71,23 +94,7 @@ function interpolate(targetRule, sourceNumber, sourceRules) {
   return branches;
 }
 
-
-function parseRules(rulesBlob) {
-  rulesBlob = rulesBlob.split('\n');
-
-  const rulesMap = new Array(rulesBlob.length);
-
-  for (const ruleString of rulesBlob) {
-    const [index, rule] = ruleString.split(': ');
-    rulesMap[index] = rule.split(' | ')
-                          .map(option => {
-                                return option.split(' ').map((member) => {
-                                  if (isNaN(Number(member))) return member[1];
-                                  return Number(member);
-                                });
-                              });
-  }
-
+function getValidStrings(rulesMap) {
   const orderedRules = topologicalSort(rulesMap);
 
   for (const sourceRuleNumber of orderedRules) {
@@ -109,4 +116,4 @@ function countValidMessages(validMessages, rawMessages) {
   return rawMessages.filter((message) => (validMessages.has(message))).length
 }
 
-console.log("Part 1: ", countValidMessages(parseRules(rulesInput), messagesInput.split('\n')));
+console.log("Part 1: ", countValidMessages(getValidStrings(parseRules(rulesInput)), parseMessages(messagesInput)));
