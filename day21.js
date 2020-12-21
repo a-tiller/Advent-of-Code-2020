@@ -45,8 +45,19 @@ function parseInput(foodList) {
   return { ingredientCounts, ingredientToAllergens, allergenToIngredients };
 }
 
+function possibleAllergenList(allergenToIngredients) {
+  const possibleAllergenIngredients = new Set();
+
+  for (const ingredientList of allergenToIngredients.values()) {
+    for (const ingredient of ingredientList) {
+      possibleAllergenIngredients.add(ingredient);
+    }
+  }
+
+  return [...possibleAllergenIngredients]
+}
+
 function deduceAllegens(allergenToIngredients) {
-  console.log(allergenToIngredients.keys())
   const workingCopy = new Map(allergenToIngredients);
 
   const allergenToIngredient = {};
@@ -70,8 +81,6 @@ function deduceAllegens(allergenToIngredients) {
 }
 
 function makeCanonicalList(allergenToIngredient) {
-  console.log(allergenToIngredient)
-
   return Object.entries(allergenToIngredient)
             .sort(([allergenA, ingredientA], [allergenB, ingredientB]) => (allergenA > allergenB ? 1 : -1))
             .map(([allergen, ingredient]) => (ingredient))
@@ -82,15 +91,7 @@ const { ingredientCounts, ingredientToAllergens, allergenToIngredients } = parse
 
 let sum = [...ingredientCounts.values()].reduce((a, b) => (a + b));
 
-const possibleAllergenIngredients = new Set();
-
-for (const ingredientList of allergenToIngredients.values()) {
-  for (const ingredient of ingredientList) {
-    possibleAllergenIngredients.add(ingredient);
-  }
-}
-
-for (const ingredient of [...possibleAllergenIngredients]) {
+for (const ingredient of possibleAllergenList(allergenToIngredients)) {
   sum -= ingredientCounts.get(ingredient);
 }
 
