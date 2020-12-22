@@ -21,7 +21,7 @@ function playRecursiveCombat(deck1, deck2) {
   const previouslyPlayed = [];
 
   while (deck1.length && deck2.length) {
-    const serializedDeck1 = deck1.join('');
+    const serializedDeck1 = deck1.join('-');
     if (previouslyPlayed.includes(serializedDeck1)) return { winner: 1, winningDeck: deck1 };
     previouslyPlayed.push(serializedDeck1);
 
